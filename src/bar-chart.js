@@ -101,7 +101,8 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar) x -= _barWidth / 2;
+                if (_centerBar && _chart.focusChart()) { x -= _barWidth / 2; }
+                else if (!_centerBar && !_chart.focusChart()) { x -= _barWidth / 2; }
                 if (_chart.isOrdinal()) x += _gap/2;
                 return dc.utils.safeNumber(x);
             })
@@ -132,9 +133,9 @@ dc.barChart = function (parent, chartGroup) {
             if (_chart.isOrdinal() && !_gap)
                 _barWidth = Math.floor(_chart.x().rangeBand());
             else if (_gap)
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / (numberOfBars + 1));
             else
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / (numberOfBars + 1));
 
             if (_barWidth == Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH)
                 _barWidth = MIN_BAR_WIDTH;
